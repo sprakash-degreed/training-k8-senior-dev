@@ -53,7 +53,6 @@ logs/
 
 # Build artifacts
 dist/
-build/
 
 # Documentation that will be added later
 docs/

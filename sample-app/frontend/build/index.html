@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>K8s Tutorial App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .service-status { background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        button { background: #007cba; color: white; border: none; padding: 10px 20px; margin: 5px; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .response { background: #e8f5e8; padding: 15px; margin: 10px 0; border-radius: 3px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kubernetes Tutorial - Sample Application</h1>
+        <div class="service-status">
+            <h3>Frontend Service</h3>
+            <p>Status: <span id="frontend-status">Loading...</span></p>
+        </div>
+        
+        <h3>Test API Endpoints</h3>
+        <button onclick="testEndpoint('/api/health')">Frontend Health</button>
+        <button onclick="testEndpoint('/api/gateway/health')">Gateway Health</button>
+        <button onclick="testEndpoint('/api/users/health')">User Service Health</button>
+        <button onclick="testEndpoint('/api/products/health')">Product Service Health</button>
+        
+        <div id="response"></div>
+    </div>
+    
+    <script>
+        async function testEndpoint(path) {
+            const responseDiv = document.getElementById("response");
+            try {
+                const response = await fetch(path);
+                const data = await response.json();
+                responseDiv.innerHTML = `<div class="response">Response from ${path}:\n${JSON.stringify(data, null, 2)}</div>`;
+            } catch (error) {
+                responseDiv.innerHTML = `<div class="response">Error calling ${path}:\n${error.message}</div>`;
+            }
+        }
+        
+        // Check frontend status on load
+        testEndpoint("/api/health").then(() => {
+            document.getElementById("frontend-status").textContent = "Healthy";
+        }).catch(() => {
+            document.getElementById("frontend-status").textContent = "Error";
+        });
+    </script>
+</body>
+</html>
